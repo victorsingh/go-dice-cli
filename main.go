@@ -13,14 +13,12 @@ type Die struct {
 }
 
 type numObject struct {
-
 	value int
 	prob float64
 	nextVal *numObject
 }
 
 func(v *Die) addNewValue(val int, prob float64) {
-
 	v.X.nextVal = &numObject{val, prob, nil}
 }
 
@@ -30,22 +28,36 @@ func main() {
 	fmt.Println("Hey there, welcome to the die maker")
 	
 	buf := bufio.NewScanner(os.Stdin)
+	bufExit := bufio.NewScanner(os.Stdin)
 
-	fmt.Println("Enter the value here:")
-	buf.Scan()
-	desiredValue := buf.Text()
+	for bufExit.Text() != "Exit" {
+		fmt.Println("Enter the value here:")
+		buf.Scan()
+		desiredValue := buf.Text()
 
-	fmt.Println("Now enter the probability of that value")
-	buf.Scan()
-	desiredProbability := buf.Text()
+		fmt.Println("Now enter the probability of that value")
+		buf.Scan()
+		desiredProbability := buf.Text()
 
-	convertDesireProb, err := strconv.Atoi(desiredProbability)
+		convertDesireProb, err := strconv.ParseFloat(desiredProbability, 64)
 
-	if err != nil {
-		// handle error
-	 }
+		if err != nil {
+			// handle error
+			fmt.Print("You did not enter a proper value!")
+			continue
+		}
 
-	fmt.Println(desiredValue, desiredProbability, reflect.TypeOf(convertDesireProb))
-	v := Die{numObject{3, float64(2)/3, nil}}
-	fmt.Println(v.X)
+		if convertDesireProb >= 1 {
+			fmt.Println("This cannot be a probability")
+			break
+		}
+
+		fmt.Println(desiredValue, desiredProbability, reflect.TypeOf(convertDesireProb))
+		v := Die{numObject{3, float64(2)/3, nil}}
+		fmt.Println(v.X)
+
+		fmt.Println("Enter Exit to end program (soon here will have an option to roll)")
+		bufExit.Scan()
+	}
+	
 }
