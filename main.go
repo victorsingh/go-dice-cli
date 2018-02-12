@@ -10,16 +10,21 @@ import (
 
 type Die struct {
 	X numObject
+	CurrDie numObject
 }
 
 type numObject struct {
 	value int
 	prob float64
-	nextVal *numObject
+}
+
+func(v *Die) SetCurrentNumObject(curr numObject) {
+	v.CurrDie = curr
 }
 
 func(v *Die) addNewValue(val int, prob float64) {
-	v.X.nextVal = &numObject{val, prob, nil}
+	v.X.nextVal = &numObject{val, prob}
+	v.SetCurrentNumObject
 }
 
 // Goal: Make die roll object oriented and functional
@@ -53,7 +58,8 @@ func main() {
 		}
 
 		fmt.Println(desiredValue, desiredProbability, reflect.TypeOf(convertDesireProb))
-		v := Die{numObject{3, float64(2)/3, nil}}
+		x := numObject{3, float64(2)/3, nil}
+		v := Die{x, x}
 		fmt.Println(v.X)
 
 		fmt.Println("Enter Exit to end program (soon here will have an option to roll)")
